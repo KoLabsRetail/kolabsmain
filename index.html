@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KoLabs — TikTok Shop & eBay</title>
+  <meta name="description" content="KoLabs: We run a high-velocity TikTok Shop and eBay business. See how we operate, what we sell, and our order count.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+
+  <main>
+    <section class="hero center">
+      <div class="container hero-inner">
+        <h1 class="text-shadow logo">KoLabs</h1>
+        <p class="lead">Retail e‑commerce business on <em>TikTok Shop</em> and <em>eBay</em>. Fast shipping. Simple returns.</p>
+        <div class="icon-row">
+          <a class="pill-btn" id="icon-tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok Shop">TikTok</a>
+          <a class="pill-btn" id="icon-ebay" href="#" target="_blank" rel="noopener" aria-label="eBay Store">eBay</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+
+    <section id="orders" class="section center">
+      <div class="container">
+        <div class="orders-card reveal" role="status" aria-live="polite" data-reveal="orders">
+          <div class="orders-label">Orders fulfilled</div>
+          <div class="orders-value"><span id="ordersCountCard" data-target="43">0</span></div>
+          <div class="orders-sub muted">Across TikTok Shop and eBay</div>
+          <div class="orders-trust muted" id="ordersTrust">Trusted by over 1,250 customers</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider" aria-hidden="true"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-left">© <span id="year"></span> KoLabs</div>
+      <div class="footer-contact"><a href="contact.html">Contact</a></div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
