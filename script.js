@@ -28,7 +28,7 @@ if (heroTikTok && LINKS.tiktok) heroTikTok.setAttribute('href', LINKS.tiktok);
 if (heroEbay && LINKS.ebay) heroEbay.setAttribute('href', LINKS.ebay);
 
 // Orders count-up animation (simple, smooth)
-// Priority: DOM data-target -> ?orders=NUMBER -> default 44
+// Priority: DOM data-target -> ?orders=NUMBER -> default 106
 function getInitialOrders() {
   const el = document.getElementById('ordersCountCard');
   if (el) {
@@ -38,7 +38,7 @@ function getInitialOrders() {
   const url = new URL(window.location.href);
   const qp = url.searchParams.get('orders');
   if (qp && /^\d+$/.test(qp)) return parseInt(qp, 10);
-  return 44;
+  return 106;
 }
 function startCountUp(target) {
   const el = document.getElementById('ordersCountCard');
