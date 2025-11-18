@@ -276,7 +276,7 @@ body {
     0 2px 8px rgba(0,0,0,0.10);
 }
 
-/* Orders cards */
+/* Orders cards container */
 .orders-row {
   display: flex;
   flex-wrap: wrap;
@@ -285,6 +285,7 @@ body {
   margin-top: 18px;
 }
 
+/* Orders & GMV cards */
 .orders-card {
   background: #fff;
   box-shadow:
@@ -299,6 +300,23 @@ body {
 
 .gmv-card {
   background: #f9fafb;
+}
+
+/* Force card order on desktop: Orders left, GMV right */
+.orders-card[data-reveal="orders"] {
+  order: 1;
+}
+
+.orders-card[data-reveal="gmv"] {
+  order: 2;
+}
+
+/* On small screens they can stack naturally */
+@media (max-width: 640px) {
+  .orders-card[data-reveal="orders"],
+  .orders-card[data-reveal="gmv"] {
+    order: initial;
+  }
 }
 
 .orders-label {
@@ -317,6 +335,11 @@ body {
 .orders-trust {
   margin-top: 4px;
   font-size: 13px;
+}
+
+/* GMV number span */
+#gmvCount {
+  display: inline-block;
 }
 
 /* Divider above footer */
