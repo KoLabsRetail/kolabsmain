@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     yearEl.textContent = new Date().getFullYear();
   }
 
-  // Logo letter animation: split "KoLabs" into spans
+  // Logo animation: split text into spans
   const logo = document.querySelector('.logo');
   if (logo) {
     const text = logo.textContent.trim();
@@ -24,12 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Counter for orders
-  let ordersAnimated = false;
-  const ordersCountEl = document.getElementById('ordersCountCard');
-
-  function animateCount(el) {
+  // Generic rolling number animator
+  function animateCount(el, format = false) {
     if (!el) return;
+
     const target = parseInt(el.dataset.target || '0', 10);
     const duration = 1500;
     const start = 0;
@@ -39,18 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const value = Math.floor(start + (target - start) * progress);
-      el.textContent = value.toString();
+
+      el.textContent = format ? value.toLocaleString() : value;
+
       if (progress < 1) {
         requestAnimationFrame(tick);
       } else {
-        el.textContent = target.toString();
+        el.textContent = format ? target.toLocaleString() : target;
       }
     }
 
     requestAnimationFrame(tick);
   }
 
-  // Reveal on scroll + hook counter when orders card appears
+  let ordersAnimated = false;
+  let gmvAnimated = false;
+
+  const ordersCountEl = document.getElementById('ordersCountCard');
+  const gmvCountEl = document.getElementById('gmvCount');
+
+  // Reveal animation observer
   const reveals = document.querySelectorAll('.reveal');
 
   if ('IntersectionObserver' in window) {
@@ -60,12 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
 
-            if (
-              entry.target.dataset.reveal === 'orders' &&
-              !ordersAnimated
-            ) {
+            // ORDERS counter
+            if (entry.target.dataset.reveal === 'orders' && !ordersAnimated) {
               ordersAnimated = true;
-              animateCount(ordersCountEl);
+              animateCount(ordersCountEl, false);
+            }
+
+            // GMV counter (formatted with commas)
+            if (entry.target.dataset.reveal === 'gmv' && !gmvAnimated) {
+              gmvAnimated = true;
+              animateCount(gmvCountEl, true);
             }
 
             observer.unobserve(entry.target);
@@ -77,8 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     reveals.forEach(el => observer.observe(el));
   } else {
-    // Fallback: reveal everything immediately
+    // Fallback: reveal everything and animate both immediately
     reveals.forEach(el => el.classList.add('revealed'));
-    if (ordersCountEl) animateCount(ordersCountEl);
+    if (ordersCountEl) animateCount(ordersCountEl, false);
+    if (gmvCountEl) animateCount(gmvCountEl, true);
   }
 });
