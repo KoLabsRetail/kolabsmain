@@ -23,18 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Easing function for smoother motion (easeOutCubic)
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
   // Generic rolling number animator
   function animateCount(el, format) {
     if (!el) return;
 
     const target = parseInt(el.dataset.target || '0', 10);
-    const duration = 1500;
+    const duration = 2000; // a bit longer = smoother
     const start = 0;
     const startTime = performance.now();
 
     function tick(now) {
       const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const rawProgress = Math.min(elapsed / duration, 1);
+      const progress = easeOutCubic(rawProgress);
       const value = Math.floor(start + (target - start) * progress);
 
       if (format === 'currency') {
@@ -43,9 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         el.textContent = value.toString();
       }
 
-      if (progress < 1) {
+      if (rawProgress < 1) {
         requestAnimationFrame(tick);
       } else {
+        // Snap cleanly to final value
         if (format === 'currency') {
           el.textContent = target.toLocaleString('en-GB');
         } else {
@@ -57,13 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(tick);
   }
 
-  const counters = document.querySelectorAll('[data-counter]');
   const reveals = document.querySelectorAll('.reveal');
 
-  // Helper to animate all counters inside a card once
   function animateCountersIn(element) {
-    const innerCounters = element.querySelectorAll('[data-counter]');
-    innerCounters.forEach(counter => {
+    const counters = element.querySelectorAll('[data-counter]');
+    counters.forEach(counter => {
       if (counter.dataset.animated === 'true') return;
       counter.dataset.animated = 'true';
       const format = counter.dataset.format || null;
@@ -79,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
           entry.target.classList.add('revealed');
           animateCountersIn(entry.target);
-
           observer.unobserve(entry.target);
         });
       },
@@ -88,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     reveals.forEach(el => observer.observe(el));
   } else {
-    // Fallback: reveal and animate everything immediately
+    // Fallback: reveal + animate everything immediately
     reveals.forEach(el => {
       el.classList.add('revealed');
       animateCountersIn(el);
