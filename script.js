@@ -1,99 +1,84 @@
-// Smooth in-page navigation
-document.addEventListener('click', (e) => {
-  const target = e.target;
-  if (target instanceof Element && target.matches('a[href^="#"]')) {
-    const href = target.getAttribute('href');
-    if (href && href.length > 1) {
-      const el = document.querySelector(href);
-      if (el) {
-        e.preventDefault();
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+document.addEventListener('DOMContentLoaded', () => {
+  // Set year in footer
+  const yearEl = document.getElementById('year');
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+
+  // Logo letter animation: split "KoLabs" into spans
+  const logo = document.querySelector('.logo');
+  if (logo) {
+    const text = logo.textContent.trim();
+    logo.textContent = '';
+    text.split('').forEach((char, i) => {
+      const span = document.createElement('span');
+      span.textContent = char;
+      span.classList.add('char');
+      span.style.animationDelay = `${i * 60}ms`;
+      logo.appendChild(span);
+    });
+
+    // trigger animation
+    requestAnimationFrame(() => {
+      logo.classList.add('animated');
+    });
+  }
+
+  // Counter for orders
+  let ordersAnimated = false;
+  const ordersCountEl = document.getElementById('ordersCountCard');
+
+  function animateCount(el) {
+    if (!el) return;
+    const target = parseInt(el.dataset.target || '0', 10);
+    const duration = 1500;
+    const start = 0;
+    const startTime = performance.now();
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const value = Math.floor(start + (target - start) * progress);
+      el.textContent = value.toString();
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = target.toString();
       }
     }
+
+    requestAnimationFrame(tick);
+  }
+
+  // Reveal on scroll + hook counter when orders card appears
+  const reveals = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+
+            if (
+              entry.target.dataset.reveal === 'orders' &&
+              !ordersAnimated
+            ) {
+              ordersAnimated = true;
+              animateCount(ordersCountEl);
+            }
+
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    reveals.forEach(el => observer.observe(el));
+  } else {
+    // Fallback: reveal everything immediately
+    reveals.forEach(el => el.classList.add('revealed'));
+    if (ordersCountEl) animateCount(ordersCountEl);
   }
 });
-
-// Dynamic year in footer (if footer exists)
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-
-// External links: set your real URLs here
-const LINKS = {
-  tiktok: '#', // e.g., 'https://www.tiktok.com/@yourshop'
-  ebay: '#',   // e.g., 'https://www.ebay.co.uk/str/yourstore'
-};
-const heroTikTok = document.getElementById('icon-tiktok');
-const heroEbay = document.getElementById('icon-ebay');
-if (heroTikTok && LINKS.tiktok) heroTikTok.setAttribute('href', LINKS.tiktok);
-if (heroEbay && LINKS.ebay) heroEbay.setAttribute('href', LINKS.ebay);
-
-// Orders count-up animation (simple, smooth)
-// Priority: DOM data-target -> ?orders=NUMBER -> default 106
-function getInitialOrders() {
-  const el = document.getElementById('ordersCountCard');
-  if (el) {
-    const ds = el.getAttribute('data-target');
-    if (ds && /^\d+$/.test(ds)) return parseInt(ds, 10);
-  }
-  const url = new URL(window.location.href);
-  const qp = url.searchParams.get('orders');
-  if (qp && /^\d+$/.test(qp)) return parseInt(qp, 10);
-  return 106;
-}
-function startCountUp(target) {
-  const el = document.getElementById('ordersCountCard');
-  if (!el) return;
-  const durationMs = 2200;
-  const startTime = performance.now();
-  function easeInOutCubic(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  }
-  function tick(now) {
-    const t = Math.min(1, (now - startTime) / durationMs);
-    const eased = easeInOutCubic(t);
-    const value = Math.round(target * eased);
-    el.textContent = String(value);
-    if (t < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-const targetOrders = getInitialOrders();
-startCountUp(targetOrders);
-
-// Reveal on load/scroll
-function setupReveal() {
-  const els = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-  els.forEach(el => io.observe(el));
-}
-setupReveal();
-
-// Logo letter-by-letter animation (once on load)
-function animateLogoOnce() {
-  const heading = document.querySelector('.logo');
-  if (!heading) return;
-  const text = heading.textContent || '';
-  heading.textContent = '';
-  const frag = document.createDocumentFragment();
-  Array.from(text).forEach((ch, idx) => {
-    const span = document.createElement('span');
-    span.className = 'char';
-    span.textContent = ch;
-    span.style.animationDelay = `${100 + idx * 120}ms`;
-    frag.appendChild(span);
-  });
-  heading.appendChild(frag);
-  // trigger
-  requestAnimationFrame(() => heading.classList.add('animated'));
-}
-
-window.addEventListener('DOMContentLoaded', animateLogoOnce, { once: true });
-
