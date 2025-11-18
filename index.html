@@ -11,13 +11,11 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  
-
   <main>
     <section class="hero center">
       <div class="container hero-inner">
         <h1 class="text-shadow logo">KoLabs</h1>
-        <p class="lead">Retail e‑commerce business on <em>TikTok Shop</em> and <em>eBay</em>. Fast shipping. Simple returns.</p>
+        <p class="lead">Retail e-commerce business on <em>TikTok Shop</em> and <em>eBay</em>. Fast shipping. Simple returns.</p>
         <div class="icon-row">
           <a class="pill-btn" id="icon-tiktok" href="#" target="_blank" rel="noopener" aria-label="TikTok Shop">TikTok</a>
           <a class="pill-btn" id="icon-ebay" href="#" target="_blank" rel="noopener" aria-label="eBay Store">eBay</a>
@@ -29,11 +27,23 @@
 
     <section id="orders" class="section center">
       <div class="container">
-        <div class="orders-card reveal" role="status" aria-live="polite" data-reveal="orders">
-          <div class="orders-label">Orders fulfilled</div>
-          <div class="orders-value"><span id="ordersCountCard" data-target="106">0</span></div>
-          <div class="orders-sub muted">Across TikTok Shop and eBay</div>
-          <div class="orders-trust muted" id="ordersTrust">Trusted by over 106 customers</div>
+        <div class="orders-row">
+          <!-- MAIN ORDERS CARD -->
+          <div class="orders-card reveal" role="status" aria-live="polite" data-reveal="orders">
+            <div class="orders-label">Orders fulfilled</div>
+            <div class="orders-value">
+              <span id="ordersCountCard" data-target="180">0</span>+
+            </div>
+            <div class="orders-sub muted">Across TikTok Shop and eBay</div>
+            <div class="orders-trust muted" id="ordersTrust">Trusted by over 180 customers</div>
+          </div>
+
+          <!-- GMV CARD -->
+          <div class="orders-card reveal gmv-card" aria-live="polite">
+            <div class="orders-label">Last 28 days</div>
+            <div class="orders-value">£2k+</div>
+            <div class="orders-sub muted">Gross merchandise volume (GMV)</div>
+          </div>
         </div>
       </div>
     </section>
@@ -51,4 +61,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
